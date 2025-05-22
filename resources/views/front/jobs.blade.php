@@ -94,7 +94,7 @@
 
 
 
-        <div class="container mt-5">
+        {{-- <div class="container mt-5">
             <div class="row">
                 @if (!empty($jobs) && count($jobs) > 0)
                     @foreach ($jobs as $job)
@@ -146,7 +146,7 @@
             </div>
         </div>
 
-    </div>
+    </div> --}}
     <br><br><br>
 
 
