@@ -324,7 +324,7 @@ alt="">
                                 <div class="flipper">
                                     <!-- Front Side -->
                                     <div class="front">
-                                        <img src="{{ asset('uploads/first_section/' . $product->logo) }}"
+                                        <img src="{{ asset('uploads/product/' . $product->logo) }}"
                                             class="img-fluid" alt="{{ $product->title }}">
                                     </div>
                                     <!-- Back Side -->
