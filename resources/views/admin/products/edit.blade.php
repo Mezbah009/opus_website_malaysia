@@ -108,7 +108,7 @@
                             </div>
                             @if (!@empty($product->logo))
                             <div>
-                                <img width="250" src="{{asset('uploads/first_section/'.$product->logo)}}" alt="">
+                                <img width="250" src="{{asset('uploads/product/'.$product->logo)}}" alt="">
                             </div>
                             @endif
                         </div>
