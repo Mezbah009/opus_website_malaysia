@@ -56,7 +56,7 @@
                             <td>{{$section->id}}</td>
                             <td>
                                 @if(!empty($section->logo))
-                                <img src="{{asset('uploads/first_section/'.$section->logo)}}" class="img-thumbnail" alt="{{$section->title}}" width="50">
+                                <img src="{{asset('uploads/product/'.$section->logo)}}" class="img-thumbnail" alt="{{$section->title}}" width="50">
                                 @else
                                 <img src="{{asset('admin-assets/img/default.png')}}" class="img-thumbnail" alt="default image" width="50">
                                 @endif
@@ -93,7 +93,7 @@
                                 @endif
                             </td> --}}
                             <td>
-                                
+
                                 <a href="{{ route('products.show', $section->id) }}" class="btn btn-sm btn-clean btn-icon mr-2">
                                     <span class="svg-icon svg-icon-md">
                                         <svg class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

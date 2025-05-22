@@ -18,6 +18,7 @@ use App\Models\TempImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -119,10 +120,13 @@ class ProductController extends Controller
                 if ($tempImage) {
                     $extArray = explode('.', $tempImage->name);
                     $ext = last($extArray);
-                    $newImageName = $product->id . '.' . $ext; // Use the newly created ID
+
+                    // Slugify product title
+                    $slugifiedTitle = Str::slug($product->title);
+                    $newImageName = $slugifiedTitle . '-' . $product->id . '.' . $ext;
 
                     $sPath = public_path('temp/' . $tempImage->name);
-                    $dPath = public_path('uploads/first_section/' . $newImageName);
+                    $dPath = public_path('uploads/product/' . $newImageName);
 
                     if (File::exists($sPath)) {
                         File::copy($sPath, $dPath);
@@ -131,6 +135,7 @@ class ProductController extends Controller
                     }
                 }
             }
+
 
             return redirect()->route('products.index')->with('success', 'Section added successfully');
         } else {
@@ -181,57 +186,57 @@ class ProductController extends Controller
             ]);
         }
 
+        // Find product
         $product = Product::findOrFail($id);
 
+        // Update product fields
         $product->title = $request->title;
         $product->description = $request->description;
         $product->link = $request->slug;
-
-        // Meta fields
         $product->meta_title = $request->meta_title;
         $product->meta_description = $request->meta_description;
         $product->meta_keywords = $request->meta_keywords;
-
-        // Category relationships
         $product->category_id = $request->category_id;
         $product->sub_category_id = $request->sub_category_id;
         $product->sub_sub_category_id = $request->sub_sub_category_id;
-
-        // Status
         $product->status = $request->status ?? true;
 
-        // Handle image update if new one is provided
+        $product->save();
+
+        // Handle image if new image is provided
         if (!empty($request->image_id)) {
             $tempImage = TempImage::find($request->image_id);
 
             if ($tempImage) {
                 $extArray = explode('.', $tempImage->name);
                 $ext = last($extArray);
-                $newImageName = $product->id . '.' . $ext;
+
+                // Slugify product title
+                $slugifiedTitle = Str::slug($product->title);
+                $newImageName = $slugifiedTitle . '-' . $product->id . '.' . $ext;
 
                 $sPath = public_path('temp/' . $tempImage->name);
-                $dPath = public_path('uploads/first_section/' . $newImageName);
+                $dPath = public_path('uploads/product/' . $newImageName);
 
                 if (File::exists($sPath)) {
-                    File::copy($sPath, $dPath);
-
-                    // Optionally delete old image
-                    if (!empty($product->logo)) {
-                        $oldImagePath = public_path('uploads/first_section/' . $product->logo);
-                        if (File::exists($oldImagePath)) {
-                            File::delete($oldImagePath);
-                        }
+                    // Delete old image if it exists
+                    if ($product->logo && File::exists(public_path('uploads/product/' . $product->logo))) {
+                        File::delete(public_path('uploads/product/' . $product->logo));
                     }
 
+                    // Copy new image
+                    File::copy($sPath, $dPath);
+
                     $product->logo = $newImageName;
+                    $product->save(); // Save updated logo filename
                 }
             }
         }
 
-        $product->save();
-
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        return redirect()->route('products.index')->with('success', 'Section updated successfully');
     }
+
+
 
 
     public function destroy($id)
@@ -502,18 +507,18 @@ class ProductController extends Controller
         }
     }
 
- public function destroySecondSection($id)
-{
-    $section = ProductSecondSection::findOrFail($id);
-    $productId = $section->product_id; // Make sure this column exists
-    $section->delete();
+    public function destroySecondSection($id)
+    {
+        $section = ProductSecondSection::findOrFail($id);
+        $productId = $section->product_id; // Make sure this column exists
+        $section->delete();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Product Second Section deleted successfully',
-        'redirect_url' => route('products.show', $productId),
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Second Section deleted successfully',
+            'redirect_url' => route('products.show', $productId),
+        ]);
+    }
 
 
 
@@ -623,18 +628,18 @@ class ProductController extends Controller
     }
 
 
-public function destroyThirdSection($id)
-{
-    $section = ProductThirdSection::findOrFail($id);
-    $productId = $section->product_id; // Ensure this column exists
-    $section->delete();
+    public function destroyThirdSection($id)
+    {
+        $section = ProductThirdSection::findOrFail($id);
+        $productId = $section->product_id; // Ensure this column exists
+        $section->delete();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Product Third Section deleted successfully',
-        'redirect_url' => route('products.show', $productId),
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Third Section deleted successfully',
+            'redirect_url' => route('products.show', $productId),
+        ]);
+    }
 
 
 
@@ -739,17 +744,17 @@ public function destroyThirdSection($id)
 
 
     public function destroyFourthSection($id)
-{
-    $section = ProductFourthSection::findOrFail($id);
-    $productId = $section->product_id; // Make sure this column exists in your table
-    $section->delete();
+    {
+        $section = ProductFourthSection::findOrFail($id);
+        $productId = $section->product_id; // Make sure this column exists in your table
+        $section->delete();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Product Fourth Section deleted successfully',
-        'redirect_url' => route('products.show', $productId),
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Product Fourth Section deleted successfully',
+            'redirect_url' => route('products.show', $productId),
+        ]);
+    }
 
 
 
