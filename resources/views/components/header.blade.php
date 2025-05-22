@@ -44,8 +44,8 @@
                         href="{{ route('front.services') }}">Services</a></li>
                 <li><a class="nav-link scrollto {{ Request::is('clients') ? 'active' : '' }}"
                         href="{{ route('front.clients') }}">Clients</a></li>
-                <li><a class="nav-link scrollto {{ Request::is('case-study') ? 'active' : '' }}"
-                        href="{{ route('front.caseStudy') }}">Case Study</a></li>
+                {{-- <li><a class="nav-link scrollto {{ Request::is('case-study') ? 'active' : '' }}"
+                        href="{{ route('front.caseStudy') }}">Case Study</a></li> --}}
                 <li><a class="nav-link scrollto {{ Request::is('blog') ? 'active' : '' }}"
                         href="{{ route('front.blog') }}">Blogs</a></li>
                 <li><a class="nav-link scrollto {{ Request::is('jobs') ? 'active' : '' }}"
