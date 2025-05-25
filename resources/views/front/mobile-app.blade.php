@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "Mobile App Solutions - Opus Technology Limited";
+    $title = "Mobile App Solutions - Opus System Solutions Sdn Bhd";
     $description = "Discover custom mobile app development solutions at Opus Technology. We create innovative and user-friendly apps for both Android and iOS platforms.";
     $keywords = "mobile app development, custom mobile apps, Android apps, iOS apps, mobile solutions, app development company, Opus Technology, mobile application services";
 @endphp

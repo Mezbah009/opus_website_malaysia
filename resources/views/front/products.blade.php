@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = $category->name . ' Products - Opus Technology';
+    $title = $category->name . ' Products - Opus System Solutions Sdn Bhd';
     $description = 'Explore products under the ' . $category->name . ' category by Opus Technology.';
     $keywords = $category->name . ' products, Opus Technology, fintech';
 @endphp

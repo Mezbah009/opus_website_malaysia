@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "Jobs - Careers at Opus Technology Limited";
+    $title = "Jobs - Careers at Opus System Solutions Sdn Bhd";
     $description = "Explore exciting job opportunities at Opus Technology. Join our dynamic team and help us drive innovative technology solutions. Find your next career here!";
     $keywords = "jobs, careers, employment opportunities, tech jobs, Opus Technology, job openings, technology careers, join our team";
 @endphp

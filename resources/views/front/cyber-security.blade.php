@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = 'Cyber Security Solutions - Opus Technology Limited';
+    $title = 'Cyber Security Solutions - Opus System Solutions Sdn Bhd';
     $description =
         'Opus Technology offers robust cyber security solutions to protect your business from digital threats. Our services ensure your data, networks, and systems remain secure against evolving cyber risks.';
     $keywords =

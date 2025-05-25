@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "Fintech Solutions - Opus Technology";
+    $title = "Fintech Solutions -Opus System Solutions Sdn Bhd";
     $description = "Opus Technology offers innovative fintech solutions to revolutionize financial services, enhance security, and improve transaction efficiency.";
     $keywords = "fintech solutions, financial technology, payment processing, blockchain, digital banking, mobile payments, Opus Technology";
 @endphp

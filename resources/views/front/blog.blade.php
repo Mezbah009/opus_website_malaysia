@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = 'Blogs - Opus Technology Limited';
+    $title = 'Blogs - Opus System Solutions Sdn Bhd';
     $description =
         'Read the latest blogs from Opus Technology, where we share insights on the latest trends, technological advancements, and industry news. Stay updated with expert opinions and thought leadership.';
     $keywords =

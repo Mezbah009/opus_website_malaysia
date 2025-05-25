@@ -43,7 +43,7 @@
         {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Opus Technology Limited",
+        "name": "Opus System solutions Limited",
         "url": "https://opus-bd.com/",
         "logo": "{{ asset('front-assets/img/opus-logo.png') }}",
         "contactPoint": {

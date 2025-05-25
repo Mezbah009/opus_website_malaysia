@@ -170,6 +170,7 @@ h6,
     padding: 0;
     margin: 0;
     max-height: 40px;
+    padding-top: 3px; /* Adjusted padding for better alignment */
 }
 
 .scrolled-offset {

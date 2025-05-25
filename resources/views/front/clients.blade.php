@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "Our Clients - Opus Technology Limited";
+    $title = "Our Clients - Opus System Solutions Sdn Bhd";
     $description = "Explore the diverse industries and businesses that trust Opus Technology to deliver innovative solutions and support their growth.";
     $keywords = "clients, partners, business success, Opus Technology, industry solutions, client portfolio, technology solutions";
 @endphp
