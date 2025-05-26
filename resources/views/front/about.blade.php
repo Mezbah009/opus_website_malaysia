@@ -2,7 +2,7 @@
 
 
 @php
-    $title = 'About Us - Opus Technology Limited';
+    $title = 'About Us - Opus System Solutions Sdn Bhd';
     $description = 'Learn more about Opus Technology, our mission, and our expert team.';
     $keywords =
         'about opus technology, company history, our team, technology solutions ,Top Management,Md.Jafar Iqbal, MANAGING DIRECTOR & CEO,Bipasha Afrin,DIRECTOR';

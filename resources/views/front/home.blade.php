@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
 @php
-    $title = 'Opus Technology Limited - Software & IT Solutions';
+    $title = 'Opus System Solutions Sdn Bhd - Software & IT Solutions';
     $description =
-        'Opus Technology Limited is a leading software company in Bangladesh providing microfinance solutions, enterprise solutions, fintech, AI, cybersecurity, and IT consultancy.';
+        'Opus Technology Limited is a leading software company in Malaysia providing microfinance solutions, enterprise solutions, fintech, AI, cybersecurity, and IT consultancy.';
     $keywords =
-        'Software Company in Bangladesh, IT Solutions, Enterprise Software, Microfinance solutions, Fintech, AI, Cybersecurity, Mobile Apps, Web Development';
+        'Software Company in Malaysia, IT Solutions, Enterprise Software, Microfinance solutions, Fintech, AI, Cybersecurity, Mobile Apps, Web Development';
 @endphp
 
 @section('content')
@@ -589,7 +589,7 @@ alt="{{ $member->name }}" height="300px" width="350px">
 
     <!-- ======= Frequently Asked Questions Section ======= -->
 
-    <section id="faq" class="faq section-bg">
+    {{-- <section id="faq" class="faq section-bg">
         <div class="container" data-aos="fade-up">
 
             <div class="section-title">
@@ -637,11 +637,11 @@ alt="{{ $member->name }}" height="300px" width="350px">
             </div>
 
         </div>
-    </section><!-- End Frequently Asked Questions Section -->
+    </section><!-- End Frequently Asked Questions Section --> --}}
 
     <!-- Clients Aside -->
     <section id="partner">
-        <div class="container">
+        <div class="container ">
             <div class="row">
                 <div class="col-md-12">
                     <div class="section-title text-center">
@@ -670,7 +670,7 @@ alt="{{ $member->name }}" height="300px" width="350px">
 
 
     <!-- Start Testimonial Section -->
-    <section class="faq section-bg">
+    {{-- <section class="faq section-bg">
         <div id="testimonial" class="testimonial-section">
             <div class="container">
                 <!-- Start Testimonials Carousel -->
@@ -695,7 +695,7 @@ alt="{{ $member->name }}" height="300px" width="350px">
                 <!-- End Testimonials Carousel -->
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- End Testimonial Section -->
 
 

@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = 'Contact Us - Opus Technology Limited';
+    $title = 'Contact Us - Opus System Solutions Sdn Bhd';
     $description =
         'Get in touch with Opus Technology to learn more about our solutions or ask any questions. Our team is here to help you with all your technology needs.';
     $keywords = 'contact us, Opus Technology, customer support, contact, inquiries, get in touch, technology solutions';

@@ -3,7 +3,7 @@
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
         <img src="{{ asset('admin-assets/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Opus Bangladesh</span>
+        <span class="brand-text font-weight-light">Opus Malaysia</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -220,12 +220,12 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{ route('casestudy.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-newspaper"></i>
                         <p>Case Study</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a href="{{ route('jobs.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-briefcase"></i>

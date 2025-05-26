@@ -10,9 +10,9 @@
             <!-- Uncomment below if you prefer to use an image logo -->
             <a href="{{ route('front.home') }}">
                 <img src="{{ siteSetting() && siteSetting()->logo ? asset('uploads/logo/' . siteSetting()->logo) : asset('') }}"
-                     alt="Opus logo" class="img-fluid">
+                    alt="Opus logo" class="img-fluid">
             </a>
-
+            <p style="font-size: 9px; ">Opus System Solutions Sdn Bhd</p>
         </div>
 
         <nav id="navbar" class="navbar">

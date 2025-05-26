@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "AI Solutions - Opus Technology";
+    $title = "AI Solutions - Opus System Solutions Sdn Bhd";
     $description = "Opus Technology delivers cutting-edge AI solutions to help businesses optimize processes, enhance customer experiences, and drive innovation.";
     $keywords = "AI solutions, artificial intelligence, machine learning, deep learning, business automation, data analytics, Opus Technology";
 @endphp

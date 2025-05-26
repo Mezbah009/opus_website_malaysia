@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = 'Case Study - Opus Technology Limited';
+    $title = 'Case Study - Opus System Solutions Sdn Bhd';
     $description =
         'Explore the case studies of how Opus Technology has helped businesses achieve remarkable results through our innovative technology solutions. Learn about our successful projects and their impact on various industries.';
     $keywords =

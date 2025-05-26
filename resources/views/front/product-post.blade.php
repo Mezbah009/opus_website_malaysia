@@ -8,7 +8,7 @@
 
 
 @php
-    $title = $meta_title ?? 'Opus Technology Limited';
+    $title = $meta_title ?? 'Opus System Solutions Sdn Bhd';
     $description = $meta_description ?? '';
     $keywords = $meta_keywords ?? '';
 @endphp

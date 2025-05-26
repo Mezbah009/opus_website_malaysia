@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
 @php
-    $title = "Enterprise Solutions - Opus Technology";
+    $title = "Enterprise Solutions - Opus System Solutions Sdn Bhd";
     $description = "Opus Technology provides cutting-edge enterprise solutions to streamline business operations, enhance efficiency, and drive digital transformation.";
     $keywords = "enterprise solutions, business automation, ERP, CRM, cloud computing, digital transformation, Opus Technology";
 @endphp
