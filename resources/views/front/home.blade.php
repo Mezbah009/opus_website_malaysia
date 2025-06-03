@@ -9,7 +9,6 @@
 @endphp
 
 @section('content')
-    <!-- ======= Hero Section ======= -->
     <section id="hero">
         <div class="hero-container">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
@@ -23,9 +22,20 @@
 
                 <div class="carousel-inner" role="listbox">
                     @foreach ($slider as $key => $sliders)
-                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                            <img src="{{ asset('uploads/slider/' . $sliders->image) }}" class="d-block w-100"
-                                alt="{{ $sliders->title }}">
+                        {{-- <div class="carousel-item {{ $key == 0 ? 'active' : '' }}"
+                            style="background-image: url('{{ asset('uploads/slider/' . $sliders->image) }}');">
+                            <div class="carousel-container">
+                                <div class="carousel-content container">
+                                    <h2 class="animate__animated animate__fadeInDown">{{ $sliders->title }}</h2>
+                                    <p class="animate__animated animate__fadeInUp">{{ $sliders->description }}</p>
+                                    <a href="{{ $sliders->link }}"
+                                        class="btn-get-started animate__animated animate__fadeInUp scrollto">{{ $sliders->button_name }}</a>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}"
+                            data-bg="{{ asset('uploads/slider/' . $sliders->image) }}">
                             <div class="carousel-container">
                                 <div class="carousel-content container">
                                     <h2 class="animate__animated animate__fadeInDown">{{ $sliders->title }}</h2>
@@ -50,6 +60,8 @@
             </div>
         </div>
     </section>
+
+
     <!-- End Hero -->
 
 
@@ -97,7 +109,8 @@
             @endforeach
 
         </div>
-    </section><!-- End About Us Section -->
+    </section>
+    <!-- End About Us Section -->
 
 
     <!-- ======= Second Section ======= -->
@@ -324,8 +337,8 @@ alt="">
                                 <div class="flipper">
                                     <!-- Front Side -->
                                     <div class="front">
-                                        <img src="{{ asset('uploads/product/' . $product->logo) }}"
-                                            class="img-fluid" alt="{{ $product->title }}">
+                                        <img src="{{ asset('uploads/product/' . $product->logo) }}" class="img-fluid"
+                                            alt="{{ $product->title }}">
                                     </div>
                                     <!-- Back Side -->
                                     <div class="back">
@@ -350,7 +363,7 @@ alt="">
     <!-- End Our Portfolio Section -->
 
 
-        <!-- ======= home third Section ======= -->
+    <!-- ======= home third Section ======= -->
 
     @foreach ($home_third_section as $index => $home_third_section)
         <section class="about py-5" style="background-color: {{ $index % 2 == 0 ? '#f5f9fc' : '#ffffff' }};">
