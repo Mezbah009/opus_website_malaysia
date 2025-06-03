@@ -9,8 +9,7 @@
 @endphp
 
 @section('content')
-    <!-- ======= Hero Section ======= -->
-    {{-- <section id="hero">
+    <section id="hero">
         <div class="hero-container">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 
@@ -23,9 +22,20 @@
 
                 <div class="carousel-inner" role="listbox">
                     @foreach ($slider as $key => $sliders)
-                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                            <img src="{{ asset('uploads/slider/' . $sliders->image) }}" class="d-block w-100"
-                                alt="{{ $sliders->title }}">
+                        {{-- <div class="carousel-item {{ $key == 0 ? 'active' : '' }}"
+                            style="background-image: url('{{ asset('uploads/slider/' . $sliders->image) }}');">
+                            <div class="carousel-container">
+                                <div class="carousel-content container">
+                                    <h2 class="animate__animated animate__fadeInDown">{{ $sliders->title }}</h2>
+                                    <p class="animate__animated animate__fadeInUp">{{ $sliders->description }}</p>
+                                    <a href="{{ $sliders->link }}"
+                                        class="btn-get-started animate__animated animate__fadeInUp scrollto">{{ $sliders->button_name }}</a>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}"
+                            data-bg="{{ asset('uploads/slider/' . $sliders->image) }}">
                             <div class="carousel-container">
                                 <div class="carousel-content container">
                                     <h2 class="animate__animated animate__fadeInDown">{{ $sliders->title }}</h2>
@@ -49,46 +59,7 @@
 
             </div>
         </div>
-    </section> --}}
-
-    
-
- <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    @foreach ($slider as $key => $slide)
-      <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-        <img src="{{ asset('uploads/slider/' . $slide->image) }}" class="d-block w-100 carousel-image" alt="Slide {{ $key + 1 }}">
-
-        <!-- Overlay -->
-        <div class="carousel-overlay"></div>
-
-        <!-- Caption -->
-        <div class="carousel-caption text-start">
-          <h2>{{ $slide->title }}</h2>
-          <p>{{ $slide->description }}</p>
-          @if ($slide->link)
-            <a href="{{ $slide->link }}" class="btn btn-primary">{{ $slide->button_name }}</a>
-          @endif
-        </div>
-      </div>
-    @endforeach
-  </div>
-
-  <!-- Arrows -->
-  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-  </button>
-
-  <!-- Indicators -->
-  <div class="carousel-indicators">
-    @foreach ($slider as $key => $slide)
-      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}" aria-current="{{ $key == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $key + 1 }}"></button>
-    @endforeach
-  </div>
-</div>
+    </section>
 
 
     <!-- End Hero -->
