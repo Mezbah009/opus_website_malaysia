@@ -18,6 +18,7 @@
 @section('content')
     <style>
         /* CSS Styling */
+         /* CSS Styling */
         .custom-section {
             padding: 100px;
             /* Adjust padding as needed */
@@ -118,6 +119,52 @@
             /* Darker shade for hover */
             color: #ffffff;
         }
+
+       /* Mobile Responsiveness & Repositioning */
+@media (max-width: 768px) {
+    .custom-section {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+    }
+
+    .custom-section .container {
+        padding-top: 0;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .custom-section .carousel-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+    }
+
+    .custom-section img {
+        max-height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .custom-section h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #000;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px;
+        margin: 5px 0;
+    }
+}
+
     </style>
 
     {{-- first Section --}}
