@@ -4,154 +4,184 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use Illuminate\Support\Facades\File;
-use App\Models\TempImage;
+use App\Models\BlogAuthor;
+use App\Models\BlogCategory;
+use App\Models\BlogTag;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $blogs = Blog::query()->latest(); // Order by created_at DESC
-
-        if (!empty($request->get('keyword'))) {
-            $blogs->where('title', 'like', '%' . $request->get('keyword') . '%');
-        }
-
-        $blogs = $blogs->paginate(10); // No need for another latest() call
-        return view('admin.blog.list', compact('blogs'));
+        $blogs = Blog::latest()->with('author')->paginate(10);
+        return view('admin.blogs.index', compact('blogs'));
     }
-
 
     public function create()
     {
-        return view('admin.blog.create');
+        $authors = BlogAuthor::all();
+        $categories = BlogCategory::all();
+        $tags = BlogTag::all();
+
+        return view('admin.blogs.create', compact('authors', 'categories', 'tags'));
     }
+
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'image_id' => 'required',
-            'category' => 'nullable|string',
-            'title' => 'required|string',
-            'date' => 'required|date',
-            'excerpt' => 'required|string',
-            'slug' => 'required|string|unique:blogs,slug',
-            'description' => 'nullable',
+        $request->validate([
+            'author_id' => 'required|exists:blog_authors,id',
+            'title' => 'required|string|max:255',
+            'excerpt' => 'nullable|string',
+            'content' => 'required',
+            'is_published' => 'nullable|boolean',
+            'feature_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:blog_categories,id',
+            'tag_ids' => 'nullable|array',
+            'tag_ids.*' => 'exists:blog_tags,id',
+            'published_at' => 'nullable|date',
         ]);
 
-        if ($validator->passes()) {
-            $blogPost = new Blog();
+        DB::beginTransaction();
 
-            $blogPost->category = $request->category;
-            $blogPost->title = $request->title;
-            $blogPost->date = $request->date;
-            $blogPost->excerpt = $request->excerpt;
-            $blogPost->description = $request->description;
-            $blogPost->slug = $request->slug;
-
-            // Handle image upload and save
-            if (!empty($request->image_id)) {
-                $tempImage = TempImage::find($request->image_id);
-                $extArray = explode('.', $tempImage->name);
-                $ext = last($extArray);
-                $newImageName = uniqid() . '.' . $ext; // Generate a unique filename
-                $sPath = public_path() . '/temp/' . $tempImage->name;
-                $dPath = public_path() . '/uploads/blogs/' . $newImageName;
-
-                File::copy($sPath, $dPath);
-
-                $blogPost->image = $newImageName;
+        try {
+            // Create unique slug
+            $slug = Str::slug($request->title);
+            if (Blog::where('slug', $slug)->exists()) {
+                $slug .= '-' . time();
             }
 
-            // dd($blogPost);
-            $blogPost->save();
+            $blog = new Blog();
+            $blog->author_id = $request->author_id;
+            $blog->title = $request->title;
+            $blog->slug = $slug;
+            $blog->excerpt = $request->excerpt;
+            $blog->content = $request->content;
+            $blog->is_published = $request->has('is_published') ? $request->boolean('is_published') : true;
+            $blog->published_at = $request->has('is_published')
+                ? ($request->filled('published_at') ? $request->published_at : now())
+                : null;
 
-            return redirect()->route('blog.index')->with('success', 'Section added successfully');
-        } else {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
+            // Handle feature image
+            if ($request->hasFile('feature_image')) {
+                $file = $request->file('feature_image');
+                $filename = Str::slug($request->title) . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/blogs'), $filename);
+                $blog->feature_image = $filename;
+            }
+
+            $blog->save();
+
+            // Attach categories and tags
+            if ($request->filled('category_ids')) {
+                $blog->categories()->sync($request->category_ids);
+            }
+
+            if ($request->filled('tag_ids')) {
+                $blog->tags()->sync($request->tag_ids);
+            }
+
+            DB::commit();
+
+            return redirect()->route('blogs.index')->with('success', 'Blog created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()]);
         }
     }
 
-    public function edit($id)
+    public function edit(Blog $blog)
     {
-        $blog = Blog::findOrFail($id);
-        return view('admin.blog.edit', compact('blog'));
+        $authors = BlogAuthor::all();
+        $categories = BlogCategory::all();
+        $tags = BlogTag::all();
+
+        $selectedCategories = $blog->categories->pluck('id')->toArray();
+        $selectedTags = $blog->tags->pluck('id')->toArray();
+
+        return view('admin.blogs.edit', compact('blog', 'authors', 'categories', 'tags', 'selectedCategories', 'selectedTags'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Blog $blog)
     {
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'category' => 'nullable|string',
-            'title' => 'required|string',
-            'date' => 'required|date',
-            'excerpt' => 'required|string',
-            'slug' => 'required|string|unique:blogs,slug,' . $id,
+        $request->validate([
+            'author_id' => 'required|exists:blog_authors,id',
+            'title' => 'required|string|max:255',
+            'excerpt' => 'nullable|string',
+            'content' => 'required',
+            'is_published' => 'nullable|boolean',
+            'feature_image' => 'nullable|image|mimes:jpg,jpeg,png',
+            'category_ids' => 'nullable|array',
+            'tag_ids' => 'nullable|array',
+            'published_at' => 'nullable|date',
         ]);
 
-        if ($validator->passes()) {
-            // Find the blog post by its ID
-            $blogPost = Blog::findOrFail($id);
+        $slug = Str::slug($request->title);
+        if ($slug !== $blog->slug) {
+            $slugCount = Blog::where('slug', $slug)->where('id', '!=', $blog->id)->count();
+            if ($slugCount > 0) {
+                $slug .= '-' . time();
+            }
+            $blog->slug = $slug;
+        }
 
-            // Update the blog post attributes
-            $blogPost->category = $request->category;
-            $blogPost->title = $request->title;
-            $blogPost->date = $request->date;
-            $blogPost->excerpt = $request->excerpt;
-            $blogPost->description = $request->description;
-            $blogPost->slug = $request->slug;
+        $blog->author_id = $request->author_id;
+        $blog->title = $request->title;
+        $blog->excerpt = $request->excerpt;
+        $blog->content = $request->content;
+        $blog->is_published = $request->has('is_published');
+        $blog->published_at = $blog->is_published
+            ? ($request->filled('published_at') ? $request->published_at : now())
+            : null;
 
-            // Handle image update
-            if (!empty($request->image_id)) {
-                $tempImage = TempImage::find($request->image_id);
-                $extArray = explode('.', $tempImage->name);
-                $ext = last($extArray);
-                $newImageName = uniqid() . '.' . $ext; // Generate a unique filename
-                $sPath = public_path() . '/temp/' . $tempImage->name;
-                $dPath = public_path() . '/uploads/blogs/' . $newImageName;
-
-                File::copy($sPath, $dPath);
-
-                // Remove old image if exists
-                if (!empty($blogPost->image) && file_exists(public_path('/uploads/blogs/' . $blogPost->image))) {
-                    unlink(public_path('/uploads/blogs/' . $blogPost->image));
-                }
-
-                $blogPost->image = $newImageName;
+        // Feature image
+        if ($request->hasFile('feature_image')) {
+            // Delete old if exists
+            if ($blog->feature_image && File::exists(public_path('uploads/blogs/' . $blog->feature_image))) {
+                File::delete(public_path('uploads/blogs/' . $blog->feature_image));
             }
 
-            // Save the updated blog post
-            $blogPost->save();
-
-            return redirect()->route('blog.index')->with('success', 'Blog post updated successfully');
-        } else {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
+            $file = $request->file('feature_image');
+            $filename = Str::slug($blog->title) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/blogs'), $filename);
+            $blog->feature_image = $filename;
         }
+
+        $blog->save();
+
+        // Sync categories and tags
+        $blog->categories()->sync($request->category_ids ?? []);
+        $blog->tags()->sync($request->tag_ids ?? []);
+
+        return redirect()->route('blogs.index')->with('success', 'Blog updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Blog $blog)
     {
-        $section = Blog::findOrFail($id);
-        $section->delete();
+        // Delete image
+        if ($blog->feature_image && File::exists(public_path('uploads/blogs/' . $blog->feature_image))) {
+            File::delete(public_path('uploads/blogs/' . $blog->feature_image));
+        }
 
-        // Flash success message
-        session()->flash('success', 'Blog deleted successfully');
+        $blog->delete();
+        return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully');
+    }
 
-        // Return JSON response
-        return response()->json([
-            'status' => true,
-            'message' => 'Blog deleted successfully'
-        ]);
+
+
+   public function indexBlog()
+
+    {
+        $comments = \App\Models\Comment::with(['blog', 'replies'])
+            ->whereNull('parent_id') // only top-level comments
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.blogs.index-blog', compact('comments'));
     }
 }

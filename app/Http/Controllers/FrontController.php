@@ -7,10 +7,13 @@ use App\Models\AiSolution;
 use App\Models\AiSolutionSecondSection;
 use App\Models\Award;
 use App\Models\Blog;
+use App\Models\BlogCategory;
+use App\Models\BlogTag;
 use App\Models\CaseStudy;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\ClientCategory;
+use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\CyberSecurityFirstSection;
 use App\Models\CyberSecuritySecondSection;
@@ -276,25 +279,166 @@ class FrontController extends Controller
 
 
 
+    // public function blog()
+    // {
+    //     $data['blogPosts'] = Blog::orderBy('date', 'desc')->get(); // Order by date in descending order
+
+    //     return view('front.blog', $data);
+    // }
+
+
+    // public function showBlogPost($slug, Request $request)
+    // {
+    //     $query = Blog::where('slug', $slug);
+
+    //     if (!empty($request->get('keyword'))) {
+    //         $query->where('description', 'like', '%' . $request->get('keyword') . '%');
+    //     }
+
+    //     $blogPost = $query->firstOrFail();
+    //     return view('front.blog-post', compact('blogPost'));
+    // }
+
+
+
+        //blog section
+    private function getSidebarData()
+    {
+        return [
+            'categories' => BlogCategory::withCount('blogs')->get(),
+            'recentPosts' => Blog::where('is_published', 1)
+                ->whereNotNull('published_at')
+                ->latest()
+                ->take(5)
+                ->get(),
+            'tags' => BlogTag::withCount('blogs')->get(),
+        ];
+    }
+
     public function blog()
     {
-        $data['blogPosts'] = Blog::orderBy('date', 'desc')->get(); // Order by date in descending order
+        $blogs = Blog::with(['categories', 'tags', 'author'])
+            ->where('is_published', 1)
+            ->whereNotNull('published_at')
+            ->latest()
+            ->paginate(4);
 
-        return view('front.blog', $data);
+        $data = $this->getSidebarData();
+
+        return view('front.blog', array_merge(['blogs' => $blogs], $data));
     }
 
-
-    public function showBlogPost($slug, Request $request)
+    public function categoryWiseBlog($id)
     {
-        $query = Blog::where('slug', $slug);
+        $category = BlogCategory::findOrFail($id);
+        $blogs = $category->blogs()
+            ->with(['categories', 'tags', 'author'])
+            ->where('is_published', 1)
+            ->whereNotNull('published_at')
+            ->latest()
+            ->paginate(4);
+        $data = $this->getSidebarData();
 
-        if (!empty($request->get('keyword'))) {
-            $query->where('description', 'like', '%' . $request->get('keyword') . '%');
-        }
-
-        $blogPost = $query->firstOrFail();
-        return view('front.blog-post', compact('blogPost'));
+        return view('front.blog', array_merge(['blogs' => $blogs, 'category' => $category], $data));
     }
+
+    public function tagWiseBlog($id)
+    {
+        $tag = BlogTag::findOrFail($id);
+        $blogs = $tag->blogs()
+            ->with(['categories', 'tags', 'author'])
+            ->where('is_published', 1)
+            ->whereNotNull('published_at')
+            ->latest()
+            ->paginate(4);
+        $data = $this->getSidebarData();
+
+        return view('front.blog', array_merge(['blogs' => $blogs, 'tag' => $tag], $data));
+    }
+
+
+    public function searchBlog(Request $request)
+    {
+        $query = $request->input('q');
+
+        $blogs = Blog::with(['categories', 'tags', 'author'])
+            ->where(function ($qBuilder) use ($query) {
+                $qBuilder->where('title', 'like', "%{$query}%")
+                    ->orWhere('slug', 'like', "%{$query}%")
+                    ->orWhere('content', 'like', "%{$query}%");
+            })
+            ->latest()
+            ->paginate(4);
+
+
+        $blogs->appends(['q' => $query]);
+
+
+
+        $data = $this->getSidebarData();
+
+        return view('front.blog', array_merge(['blogs' => $blogs, 'query' => $query], $data));
+    }
+
+
+
+    public function blogDetails($slug)
+    {
+        $blog = Blog::where('slug', $slug)
+            ->where('is_published', true)
+            ->whereNotNull('published_at')
+            ->firstOrFail();
+
+        $categories = BlogCategory::withCount('blogs')->get();
+
+        $recentPosts = Blog::where('is_published', true)
+            ->whereNotNull('published_at')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $tags = BlogTag::withCount('blogs')->get();
+
+        $comments = $blog->comments()
+            ->whereNull('parent_id')
+            ->with('replies')
+            ->get();
+
+        return view('front.blog-details', compact('blog', 'categories', 'recentPosts', 'tags', 'comments'));
+    }
+
+
+
+
+    public function storeComment(Request $request)
+    {
+        $validated = $request->validate([
+            'blog_id' => 'required|exists:blogs,id',
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'website' => 'nullable|url',
+            'comment' => 'required|string',
+            'parent_id' => 'nullable|exists:comments,id',
+
+        ]);
+
+        Comment::create($validated);
+
+        return back()->with('success', 'Your comment has been posted.');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function showLeaderPost($link, Request $request)
     {
