@@ -4,7 +4,10 @@ use App\Http\Controllers\admin\AccreditationController;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\AiSolutionController;
 use App\Http\Controllers\admin\AwardController;
+use App\Http\Controllers\admin\BlogAuthorController;
+use App\Http\Controllers\admin\BlogCategoryController;
 use App\Http\Controllers\admin\BlogController;
+use App\Http\Controllers\admin\BlogTagController;
 use App\Http\Controllers\admin\CaseStudyController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\ClientCategoryController;
@@ -78,17 +81,27 @@ Route::get('/jobs', [FrontController::class, 'job'])->name('front.jobs');
 Route::get('products/{slug}', [FrontController::class, 'showProduct'])->name('product.show');
 
 
-Route::get('blogs/{slug}', [FrontController::class, 'showBlogPost'])->name('blog.show');
+// Route::get('blogs/{slug}', [FrontController::class, 'showBlogPost'])->name('blog.show');
 Route::get('jobs/{slug}', [FrontController::class, 'showJobPost'])->name('job.show');
 Route::get('leaders/{link}', [FrontController::class, 'showLeaderPost'])->name('leader.show');
 Route::get('/fintech-solutions', [FrontController::class, 'fintech'])->name('front.fintech');
 Route::get('/clients', [FrontController::class, 'clients'])->name('front.clients');
-Route::get('/blogs', [FrontController::class, 'blog'])->name('front.blog');
+// Route::get('/blogs', [FrontController::class, 'blog'])->name('front.blog');
 Route::get('/services', [FrontController::class, 'services'])->name('front.services');
 
 
 Route::get('category/{slug}', [FrontController::class, 'categoryProducts'])->name('front.category.products');
 
+
+
+
+// blog Frontend Routes
+Route::get('/blog', [FrontController::class, 'blog'])->name('front.blog');
+Route::get('/blog/search', [FrontController::class, 'searchBlog'])->name('front.blog.search');
+Route::get('/blogs/category/{id}', [FrontController::class, 'categoryWiseBlog'])->name('front.blog.category');
+Route::get('/blogs/tag/{id}', [FrontController::class, 'tagWiseBlog'])->name('front.blog.tag');
+Route::get('/blog/{slug}', [FrontController::class, 'blogDetails'])->name('front.blog.details');
+Route::post('/blog/comment/store', [FrontController::class, 'storeComment'])->name('blog.comment.store');
 
 
 // Demo route
@@ -275,14 +288,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/services/{services}', [ServiceController::class, 'update'])->name('services.update');
         Route::delete('/services/{services}', [ServiceController::class, 'destroy'])->name('services.delete');
 
-        // Blog
-        Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-        Route::get('/blog/create', [BlogController::class, 'create'])->name('blog.create');
-        Route::post('/blog', [BlogController::class, 'store'])->name('blog.store');
-        Route::get('/blog/{blog}/edit', [BlogController::class, 'edit'])->name('blog.edit');
-        Route::put('/blog/{blog}', [BlogController::class, 'update'])->name('blog.update');
-        Route::delete('/blog/{blog}', [BlogController::class, 'destroy'])->name('blog.delete');
-
+       // Blog
+        Route::resource('blogs', BlogController::class);
+        Route::resource('blog_authors', BlogAuthorController::class);
+        Route::resource('blog_categories', BlogCategoryController::class);
+        Route::resource('blog_tags', BlogTagController::class);
+        Route::get('/comments', [BlogController::class, 'indexBlog'])->name('admin.comments.index');
 
         // Case Study
         Route::get('/casestudy', [CaseStudyController::class, 'index'])->name('casestudy.index');
